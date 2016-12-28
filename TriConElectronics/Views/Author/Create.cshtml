@@ -1,14 +1,16 @@
-﻿@using TriConElectronics.Models.Author
+﻿@model TriConElectronics.Models.Author
+@using TriConElectronics.HtmlExtension
 @{
-    ViewBag.Title = "Create";
+    var isCreating = Model.Id == 0;
+    ViewBag.Title = (isCreating) ? "Create" : "Edit";
 }
 
 <div data-bind="visible: !saveCompleted()">
 
-    <h2>Create</h2>
+    <h2>@ViewBag.Title</h2>
 
-    @using (Html.BeginForm("Create", "Authors", FormMethod.Post,
-                new { data_bind = "submit: validateAndSave" }))
+    @using (Html.BeginForm("Create", "Author", FormMethod.Post,
+              new { data_bind = "submit: validateAndSave" }))
     {
         @Html.AntiForgeryToken()
 
@@ -23,20 +25,20 @@
                     @Html.EditorFor(model => model.FirstName, new
      {
          htmlAttributes =
-                      new
-                      {
-                          @class = "form-control",
-                          data_bind = "value: author.firstName"
-                      }
+                       new
+                       {
+                           @class = "form-control",
+                           data_bind = "value: author.firstName"
+                       }
      })
                     @Html.ValidationMessageFor(model => model.FirstName, "",
-                      new { @class = "text-danger" })
+                       new { @class = "text-danger" })
                 </div>
             </div>
 
             <div class="form-group">
                 @Html.LabelFor(model => model.LastName, htmlAttributes:
-                   new { @class = "control-label col-md-2" })
+                    new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
                     @Html.EditorFor(model => model.LastName, new
      {
@@ -44,9 +46,11 @@
                        new
                        {
                            @class = "form-control",
-                           data_bind = "value:
-                           author.lastName" } })
-          @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                           data_bind = "value: author.lastName"
+                       }
+     })
+                    @Html.ValidationMessageFor(model => model.LastName, "",
+                       new { @class = "text-danger" })
                 </div>
             </div>
 
@@ -60,15 +64,20 @@
                        new
                        {
                            @class = "form-control",
-                           data_bind = "value:
-                           author.biography" } })
-          @Html.ValidationMessageFor(model => model.Biography, "", new { @class = "text-danger" })
+                           data_bind = "value: author.biography"
+                       }
+     })
+                    @Html.ValidationMessageFor(model => model.Biography, "",
+                       new { @class = "text-danger" })
                 </div>
             </div>
 
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10" data-bind="visible: !sending()">
-                    <input type="submit" value="Create" class="btn btn-default" />
+                    <input type="submit" value="@if (isCreating) {
+                       @Html.Raw("Create")
+                     } else { @Html.Raw("Update") }"
+                           class="btn btn-default" />
                 </div>
 
                 <div class="progress" data-bind="visible: sending">
@@ -89,9 +98,10 @@
 </div>
 
 @section Scripts {
-    @Scripts.Render("~/bundles/jqueryval", "/Scripts/ViewModels/AuthorFormViewModel.js")
+    @Scripts.Render("~/bundles/jqueryval",
+      "/Scripts/ViewModels/AuthorFormViewModel.js")
     <script>
-    var viewModel = new AuthorFormViewModel();
+    var viewModel = new AuthorFormViewModel(@Html.HtmlConvertToJson(Model));
     ko.applyBindings(viewModel);
     </script>
 }

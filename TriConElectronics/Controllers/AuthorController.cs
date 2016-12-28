@@ -16,16 +16,16 @@ namespace TriConElectronics.Controllers
         public ActionResult Index([Form] QueryOptions queryOptions)
         {
             //var authors = db.Authors.OrderBy(queryOptions.Sort);
-            var start = (queryOptions.CurrentPage - 1) * queryOptions.PageSize;
-            var authors = db.Authors.ToList().Skip(start).
-        Take(queryOptions.PageSize);
-
-            queryOptions.TotalPages =
-                   (int)Math.Ceiling((double)db.Authors.Count() / queryOptions.PageSize);
+           // var start = (queryOptions.CurrentPage - 1) * queryOptions.PageSize;
+           // var authors = db.Authors.ToList().//.Skip(start).
+       // Take(queryOptions.PageSize);
+       
+          //  queryOptions.TotalPages =
+                //   (int)Math.Ceiling((double)db.Authors.Count() / queryOptions.PageSize);
 
             ViewBag.QueryOptions = queryOptions;
 
-            return View(authors.ToList());
+            return View(db.Authors.ToList());
         }
 
         public ActionResult Details(int? id)
@@ -44,7 +44,8 @@ namespace TriConElectronics.Controllers
         // GET: Authors/Create
         public ActionResult Create()
         {
-            return View();
+            return View("Create", new Author());
+          //  return View();
         }
 
         // POST: Authors/Create
